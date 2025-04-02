@@ -251,25 +251,26 @@ if first_smartphone:
 count_products_to_categories = session.query(
     Product.category_id,
     Category.name.label("category_name"),
-    func.count(Product.id)
+    func.count(Product.id).label("count")
+    ).join(Category
     ).group_by(Product.category_id
-    ).join(Category).all()
+    ).all()
 
 
-for raw in count_products_to_categories:
-    print(raw)
+for count_cat in count_products_to_categories:
+    print(count_cat.category_id, count_cat.category_name, count_cat.count)
 
 # Задача 5: Группировка с фильтрацией
 # Отфильтруйте и выведите только те категории, в которых более одного продукта.
 
-count_products_to_categories = session.query(
+count_products_to_categories_gt_1 = session.query(
     Product.category_id,
-    Category.name,
-    func.count(Product.id)
+    Category.name.label("category_name"),
+    func.count(Product.id).label("count")
     ).join(Category
     ).group_by(Product.category_id
     ).having(func.count(Product.id) > 1
     ).all()
 
-for raw in count_products_to_categories:
-    print(raw)
+for count_cat in count_products_to_categories_gt_1:
+    print(count_cat.category_id, count_cat.category_name, count_cat.count)
